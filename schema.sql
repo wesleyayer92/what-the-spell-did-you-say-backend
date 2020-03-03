@@ -1,10 +1,10 @@
 
 create table spellingBee (
-    id serial primary key,
+    id integer primary key,
     word text,
     word2 text,
     partOfSpeech text,
-    definition text,
+    definition text(varchar),
     difficulty text
 );
 
