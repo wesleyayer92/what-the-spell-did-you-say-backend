@@ -4,7 +4,7 @@ create table spellingBee (
     word text,
     word2 text,
     partOfSpeech text,
-    definition text(varchar),
+    definition text,
     difficulty text
 );
 

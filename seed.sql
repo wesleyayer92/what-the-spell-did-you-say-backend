@@ -1,6 +1,6 @@
     
 insert into spellingBee
-    (word, word2, partOfSpeech, definition, difficulty)
+    (id, word, word2, partOfSpeech, definition, difficulty)
 values 
     (1, 'PUNTING', '', 'verb', 'to kick a ball when playing football, soccer or rugby before the ball hits the ground when dropped from the hands.', 'Easy'),
 (2, 'CROWD', '', 'noun', 'a large number of people especially when condensed into a compact group without order.', 'Easy'),
@@ -502,7 +502,7 @@ the knee to the ankle and typically have a strap under each foot.', 'Hard'),
 (447, 'HYDRARGYRUM', '', 'noun', 'the element mercury.', 'Hard'),
 (448, 'CARBORANE', '', 'noun', 'any of a class of compounds that are thermally stable and that are used in the synthesis of lubricants and polymers.', 'Hard'),
 (449, 'DENOUNCEMENT', '', 'noun', 'the act of making known or declaring someone such as a culprit to people in command.', 'Hard'),
-(450, 'COLUMBIA', '', 'noun', 'the United States.', 'Hard')
+(450, 'COLUMBIA', '', 'noun', 'the United States.', 'Hard');
   
 
 -- insert into userSpellingBee
