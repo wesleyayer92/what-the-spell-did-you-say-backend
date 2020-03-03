@@ -19,14 +19,17 @@ const options = {
 
 const db = pgp(options);
 async function pullFromDB(){
-    const result = await db.one(`select * from spellingBee where wordId=1  `);
-    console.log(result)
-    return result
+    const result = await db.one(`select * from spellingBee where wordId=4;`);
+    console.log('im in the function');
+    console.log(result);
+    return result;
 }
 
-router.get('/', function(req, res, next) {
+router.get('/', async (req, res, next) => {
+    const result = await pullFromDB();
+    console.log('im in router.get')
+    console.log(result);
     res.send(result);
 });
 
 module.exports = router;
-pullFromDB()
