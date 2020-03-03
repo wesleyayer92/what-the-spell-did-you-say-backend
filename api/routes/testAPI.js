@@ -20,6 +20,8 @@ const options = {
 const db = pgp(options);
 async function pullFromDB(){
     const result = await db.one(`select * from spellingBee where wordId=4;`);
+    // const result = await db.any(`select * from spellingBee;`);
+
     console.log('im in the function');
     console.log(result);
     return result;
