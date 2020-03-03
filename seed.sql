@@ -513,5 +513,5 @@ the knee to the ankle and typically have a strap under each foot.', 'Hard'),
 insert into users
    (name,emailUsername, hash)
 values
-    ('Casey', 'fayardcasey@gmail.com',  'terminus1');
+    ('Casey', 'fayardcasey@gmail.com',  '123456');
 
