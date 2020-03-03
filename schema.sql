@@ -1,6 +1,6 @@
 
 create table spellingBee (
-    id integer primary key,
+    wordId integer primary key,
     word text,
     word2 text,
     partOfSpeech text,
@@ -9,11 +9,16 @@ create table spellingBee (
 );
 
 
-
-
 create table users (
-    id serial primary key,
+    userId serial primary key,
     name text,
     emailUsername text,
     hash text
 );
+
+create table spellingBeeAttempts (
+    userId integer REFERENCES users(userId) Not Null,
+    wordId integer REFERENCES spellingBee(wordId) Not Null,
+    attemptCorrect integer,
+    dateAttempted date
+)
