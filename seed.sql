@@ -1,6 +1,6 @@
     
 insert into spellingBee
-    (id, word, word2, partOfSpeech, definition, difficulty)
+    (wordId, word, word2, partOfSpeech, definition, difficulty)
 values 
     (1, 'PUNTING', '', 'verb', 'to kick a ball when playing football, soccer or rugby before the ball hits the ground when dropped from the hands.', 'Easy'),
 (2, 'CROWD', '', 'noun', 'a large number of people especially when condensed into a compact group without order.', 'Easy'),
@@ -511,7 +511,14 @@ the knee to the ankle and typically have a strap under each foot.', 'Hard'),
 --     1, 1, 1, 'yes', 'no');
 
 insert into users
-   (name,emailUsername, hash)
+   (userId, name, emailUsername, hash)
 values
-    ('Casey', 'fayardcasey@gmail.com',  '123456');
+    ( 1, 'Casey', 'fayardcasey@gmail.com',  '123456'),
+    ( 2, 'Travis', 'travis@gmail.com',  '1234567');
+
+
+insert into spellingBeeAttempts
+   (userId, wordId, attemptCorrect, dateAttempted)
+values
+    (1, 1, 0, '03-01-2020');
 
