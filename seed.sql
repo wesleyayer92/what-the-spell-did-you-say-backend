@@ -520,5 +520,5 @@ values
 insert into spellingBeeAttempts
    (userId, wordId, attemptCorrect, dateAttempted)
 values
-    (1, 1, 0, '03-01-2020');
+    (1, 1, false, '03-01-2020');
 

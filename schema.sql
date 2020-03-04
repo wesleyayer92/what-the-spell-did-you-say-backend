@@ -19,6 +19,6 @@ create table users (
 create table spellingBeeAttempts (
     userId integer REFERENCES users(userId) Not Null,
     wordId integer REFERENCES spellingBee(wordId) Not Null,
-    attemptCorrect integer,
+    attemptCorrect boolean,
     dateAttempted date
 )
