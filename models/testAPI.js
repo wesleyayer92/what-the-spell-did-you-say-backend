@@ -37,13 +37,66 @@ async function postToDB(isCorrect) {
     }
 }
 
-async function pullFromDB(){
-    const result = await db.one(`select * from spellingBee where wordId=4;`);
+function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min)) + min;
+}
+
+async function pullFromDB() {
+    const arr = [];
+    let wordId;
+    let result;
+    for (let count = 1; count <= 6; count++) {
+        switch(count) {
+            case 1:
+                wordId = getRandomInt(1, 123);
+                result = await db.one(`select * from spellingBee where wordId=${wordId}`);
+                arr.push(result);
+                console.log(`FIRST: ${arr[0]}`)
+                break;
+            case 2:
+                wordId = getRandomInt(1, 123);
+                result = await db.one(`select * from spellingBee where wordId=${wordId}`);
+                console.log(`SECOND: ${arr[1]}`)
+                arr.push(result);
+                break;
+            case 3:
+                wordId = getRandomInt(1, 123);
+                result = await db.one(`select * from spellingBee where wordId=${wordId}`);
+                console.log(`THIRD: ${arr[2]}`)
+                arr.push(result);
+                break;
+            case 4:
+                wordId = getRandomInt(124, 350);
+                result = await db.one(`select * from spellingBee where wordId=${wordId}`);
+                console.log(`FOURTH: ${arr[3]}`)
+                arr.push(result);
+                break;
+            case 5:
+                wordId = getRandomInt(124, 350);
+                result = await db.one(`select * from spellingBee where wordId=${wordId}`);
+                console.log(`FIFTH: ${arr[4]}`)
+                arr.push(result);
+                break;
+            case 6:
+                wordId = getRandomInt(351, 450);
+                result = await db.one(`select * from spellingBee where wordId=${wordId}`);
+                console.log(`SIXTH: ${arr[5]}`)
+                arr.push(result);
+                break;
+        }
+    }
+    
+    console.log(`WHOLE: ${arr}`);
+    return arr;
+
+    // const result = await db.one(`select * from spellingBee where wordId=4;`);
     // const result = await db.any(`select * from spellingBee;`);
 
-    console.log('im in the function');
-    console.log(result);
-    return result;
+    // console.log('im in the function');
+    // console.log(result);
+    // return result;
 }
 
 router.get('/', async (req, res, next) => {
