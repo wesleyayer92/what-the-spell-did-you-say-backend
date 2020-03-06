@@ -20,10 +20,35 @@ const db = pgp(options);
 // that we're talking to
 
 
-async function scorecardPull() {
-    const result = await db.any(`select * from spellingBeeAttempts`);
-    return result;
+async function lifeTimeScore (){
+    // let attemptsCorrect = 0;
+    // let attemptsTotal = 0;
+    // let lifeTimeScore = attemptsCorrect/attemptsTotal;
+    try{
+        const attemptsCorrect = await db.result(`
+        select count(*) from spellingbeeattempts
+         where attemptCorrect=true and userid=1
+        `);
+        const attemptsTotal = await db.result(`
+        select count(*) from spellingbeeattempts
+        where userid=1;
+        `);
+        // console.log(parseInt(attemptsCorrect.rows[0].count));
+        return (parseInt(attemptsCorrect.rows[0].count)/parseInt(attemptsTotal.rows[0].count) * 100).toFixed(2);
+        //make sure that is a number not string
+        //Number(variable)
+    }
+    catch (err){
+        console.log('************ERROR****');
+        err.message;
+    }
 }
+
+
+// async function scorecardPull() {
+//     const result = await db.any(`select * from spellingBeeAttempts`);
+//     return result;
+// }
 
 async function postToDB(isCorrect, wordId) {
     try {
@@ -97,8 +122,8 @@ async function pullFromDB() {
 }
 
 router.get('/scorecard', async (req, res, next) => {
-    const result = await scorecardPull();
-    res.send(result);
+    const result = await lifeTimeScore();
+    res.json(result);
 });
 
 router.get('/', async (req, res, next) => {
@@ -113,10 +138,6 @@ router.post('/', async (req, res, next) => {
     const { attemptCorrect, wordId } = req.body;
     const response = await postToDB(attemptCorrect, wordId);
     console.log(response);
-    // response.command === "INSERT" && response.rowCount >= 1;
-    // console.log(response.command)
-    // ? res.sendStatus(200)
-    // : res.send(`COULD NOT DO THE POST THING`);
 })
 
 module.exports = router;
