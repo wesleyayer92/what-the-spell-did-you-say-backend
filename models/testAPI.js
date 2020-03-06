@@ -20,15 +20,43 @@ const db = pgp(options);
 // that we're talking to
 
 
+async function lifeTimeScore (){
+    // let attemptsCorrect = 0;
+    // let attemptsTotal = 0;
+    // let lifeTimeScore = attemptsCorrect/attemptsTotal;
+    try{
+        const attemptsCorrect = await db.result(`
+        select count(*) from spellingbeeattempts
+         where attemptCorrect=true and userid=1
+        `);
+        const attemptsTotal = await db.result(`
+        select count(*) from spellingbeeattempts
+        where userid=1;
+        `);
+        // console.log(parseInt(attemptsCorrect.rows[0].count));
+        return (parseInt(attemptsCorrect.rows[0].count)/parseInt(attemptsTotal.rows[0].count) * 100).toFixed(2);
+        //make sure that is a number not string
+        //Number(variable)
+    }
+    catch (err){
+        console.log('************ERROR****');
+        err.message;
+    }
+}
 
 
-async function postToDB(isCorrect) {
+// async function scorecardPull() {
+//     const result = await db.any(`select * from spellingBeeAttempts`);
+//     return result;
+// }
+
+async function postToDB(isCorrect, wordId) {
     try {
         const test = await db.result(`
         insert into spellingBeeAttempts
         (userId, wordId, attemptCorrect, dateAttempted)
         values
-        (1, 4, ${isCorrect}, '1999-12-31');
+        (1, ${wordId}, ${isCorrect}, '1999-12-31');
         `);
         return test;
     }
@@ -53,36 +81,30 @@ async function pullFromDB() {
                 wordId = getRandomInt(1, 123);
                 result = await db.one(`select * from spellingBee where wordId=${wordId}`);
                 arr.push(result);
-                console.log(`FIRST: ${arr[0]}`)
                 break;
             case 2:
                 wordId = getRandomInt(1, 123);
                 result = await db.one(`select * from spellingBee where wordId=${wordId}`);
-                console.log(`SECOND: ${arr[1]}`)
                 arr.push(result);
                 break;
             case 3:
                 wordId = getRandomInt(1, 123);
                 result = await db.one(`select * from spellingBee where wordId=${wordId}`);
-                console.log(`THIRD: ${arr[2]}`)
                 arr.push(result);
                 break;
             case 4:
                 wordId = getRandomInt(124, 350);
                 result = await db.one(`select * from spellingBee where wordId=${wordId}`);
-                console.log(`FOURTH: ${arr[3]}`)
                 arr.push(result);
                 break;
             case 5:
                 wordId = getRandomInt(124, 350);
                 result = await db.one(`select * from spellingBee where wordId=${wordId}`);
-                console.log(`FIFTH: ${arr[4]}`)
                 arr.push(result);
                 break;
             case 6:
                 wordId = getRandomInt(351, 450);
                 result = await db.one(`select * from spellingBee where wordId=${wordId}`);
-                console.log(`SIXTH: ${arr[5]}`)
                 arr.push(result);
                 break;
         }
@@ -99,6 +121,11 @@ async function pullFromDB() {
     // return result;
 }
 
+router.get('/scorecard', async (req, res, next) => {
+    const result = await lifeTimeScore();
+    res.json(result);
+});
+
 router.get('/', async (req, res, next) => {
     const result = await pullFromDB();
     console.log('im in router.get')
@@ -108,13 +135,9 @@ router.get('/', async (req, res, next) => {
 
 router.post('/', async (req, res, next) => {
     console.log(req.body);
-    const { attemptCorrect } = req.body;
-    const response = await postToDB(attemptCorrect);
+    const { attemptCorrect, wordId } = req.body;
+    const response = await postToDB(attemptCorrect, wordId);
     console.log(response);
-    // response.command === "INSERT" && response.rowCount >= 1;
-    // console.log(response.command)
-    // ? res.sendStatus(200)
-    // : res.send(`COULD NOT DO THE POST THING`);
 })
 
 module.exports = router;
