@@ -517,8 +517,8 @@ values
     ( 2, 'Travis', 'travis@gmail.com',  '1234567');
 
 
-insert into spellingBeeAttempts
-   (userId, wordId, attemptCorrect, dateAttempted)
-values
-    (1, 1, false, '03-01-2020');
+-- insert into spellingBeeAttempts
+--    (userId, wordId, attemptCorrect, dateAttempted)
+-- values
+--     (1, 1, false, '03-01-2020');
 
