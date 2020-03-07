@@ -20,7 +20,7 @@ const db = pgp(options);
 // that we're talking to
 
 
-async function lifeTimeScore (){
+async function lifeTimeScore() {
     // let attemptsCorrect = 0;
     // let attemptsTotal = 0;
     // let lifeTimeScore = attemptsCorrect/attemptsTotal;
@@ -45,10 +45,6 @@ async function lifeTimeScore (){
 }
 
 
-// async function scorecardPull() {
-//     const result = await db.any(`select * from spellingBeeAttempts`);
-//     return result;
-// }
 
 
 async function postToDB(isCorrect, wordId) {
@@ -124,12 +120,47 @@ async function pullFromDB() {
     // return result;
 }
 
+async function createUser(name, emailUsername, hash) {
+    try {
+        const resultObj = await db.result(`
+        SELECT emailUsername FROM users WHERE emailusername='${emailUsername}';`);
+        console.log(resultObj);
+        console.log(resultObj.rows[0]);
+        if (resultObj.rows[0] == undefined) {
+            const createUser = await db.one(`
+            insert into users
+            (name, emailUsername, hash)
+            values
+            ('${name}', '${emailUsername}', ${hash});
+            `);
+            console.log(createUser);
+            return createUser;
+        }
+        else {
+            console.log('user already exists');
+        } 
+    }
+    catch(err) {
+        console.log(err);
+    }
+}
+
+
+
+router.post('/signup', async(req, res, next) => {
+    console.log('******REQBODY*******')
+    console.log(req.body);
+    const { name, emailUsername, hash } = req.body;
+    const result = await createUser(name, emailUsername, hash);
+    console.log(result);
+})
+
 router.get('/scorecard', async (req, res, next) => {
     const result = await lifeTimeScore();
     res.json(result);
 });
 
-router.get('/', async (req, res, next) => {
+router.get('/', async(req, res, next) => {
     const result = await pullFromDB();
     console.log('im in router.get')
     console.log(result);

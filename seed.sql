@@ -510,11 +510,11 @@ the knee to the ankle and typically have a strap under each foot.', 'Hard'),
 -- VALUES
 --     1, 1, 1, 'yes', 'no');
 
-insert into users
-   (userId, name, emailUsername, hash)
-values
-    ( 1, 'Casey', 'fayardcasey@gmail.com',  '123456'),
-    ( 2, 'Travis', 'travis@gmail.com',  '1234567');
+-- insert into users
+--    (userId, name, emailUsername, hash)
+-- values
+    -- ( 1, 'Casey', 'fayardcasey@gmail.com',  '123456'),
+    -- ( 2, 'Travis', 'travis@gmail.com',  '1234567');
 
 
 -- insert into spellingBeeAttempts
