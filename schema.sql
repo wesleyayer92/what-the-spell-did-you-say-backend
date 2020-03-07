@@ -20,5 +20,5 @@ create table spellingBeeAttempts (
     userId integer REFERENCES users(userId) Not Null,
     wordId integer REFERENCES spellingBee(wordId) Not Null,
     attemptCorrect boolean,
-    dateAttempted date
+    dateAttempted timestamp
 )

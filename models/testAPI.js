@@ -50,17 +50,20 @@ async function lifeTimeScore (){
 //     return result;
 // }
 
+
 async function postToDB(isCorrect, wordId) {
+    // const date = new Date();
     try {
         const test = await db.result(`
         insert into spellingBeeAttempts
         (userId, wordId, attemptCorrect, dateAttempted)
         values
-        (1, ${wordId}, ${isCorrect}, '1999-12-31');
+        (1, ${wordId}, ${isCorrect}, localtimestamp);
         `);
         return test;
     }
     catch (err) {
+        console.log(err);
         err.message;
     }
 }
