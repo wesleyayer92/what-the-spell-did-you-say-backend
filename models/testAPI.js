@@ -39,7 +39,7 @@ async function lifeTimeScore() {
         //Number(variable)
     }
     catch (err){
-        console.log('************ERROR****');
+        console.log('************ERROR************');
         err.message;
     }
 }
@@ -125,7 +125,7 @@ async function createUser(name, emailUsername, hash) {
         const resultObj = await db.result(`
         SELECT emailUsername FROM users WHERE emailusername='${emailUsername}';`);
         console.log(resultObj);
-        console.log(resultObj.rows[0]);
+        // console.log(resultObj.rows[0]);
         if (resultObj.rows[0] == undefined) {
             const createUser = await db.one(`
             insert into users
@@ -145,7 +145,29 @@ async function createUser(name, emailUsername, hash) {
     }
 }
 
-
+async function login(emailUsername, hash) {
+    console.log('HASH');
+    console.log(hash);
+    try {
+        const resultObj = await db.result(`
+        SELECT * FROM users where emailusername='${emailUsername}' and hash='${hash}';
+        `);
+        // console.log(emailUsername);
+        console.log('HASHCHECK!!!!!!!')
+        console.log(resultObj)
+        if (resultObj.rows[0].hash == hash) {
+            // console.log('OK');
+            // allow user to proceed//
+            // allow button to work or function that goes
+            // to next page to work
+            return resultObj;
+        }
+    }
+    catch(err) {
+        console.log('hey you did it wrong');
+        return err.message;
+    }
+}
 
 router.post('/signup', async(req, res, next) => {
     console.log('******REQBODY*******')
@@ -153,6 +175,15 @@ router.post('/signup', async(req, res, next) => {
     const { name, emailUsername, hash } = req.body;
     const result = await createUser(name, emailUsername, hash);
     console.log(result);
+})
+
+router.post('/login', async(req, res, next) => {
+    console.log('*****LOGIN******')
+    const { emailUsername, hash } = req.body
+    const result = await login(emailUsername, hash);
+    result.rowCount >= 1 ?
+    res.send('ITS WORKING')
+    : res.send('ITS BROKEN');
 })
 
 router.get('/scorecard', async (req, res, next) => {
