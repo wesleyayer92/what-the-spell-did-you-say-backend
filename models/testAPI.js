@@ -33,8 +33,14 @@ async function lifeTimeScore() {
         select count(*) from spellingbeeattempts
         where emailUsername='hey this is a test';
         `);
+        const result = (parseInt(attemptsCorrect.rows[0].count)/parseInt(attemptsTotal.rows[0].count) * 100).toFixed(0);
+        console.log(result);
         // console.log(parseInt(attemptsCorrect.rows[0].count));
-        return (parseInt(attemptsCorrect.rows[0].count)/parseInt(attemptsTotal.rows[0].count) * 100).toFixed(2);
+        if (result == "NaN") {
+            return 0;
+        } else {
+            return result;
+        }
         //make sure that is a number not string
         //Number(variable)
     }
@@ -54,7 +60,7 @@ async function mostRecentScore() {
         `);
         const attemptsTotal = 6;
         // console.log(parseInt(attemptsCorrect.rows[0].count));
-        return (parseInt(attemptsCorrect.rows[0].count)/parseInt(attemptsTotal) * 100).toFixed(2);
+        return (parseInt(attemptsCorrect.rows[0].count)/parseInt(attemptsTotal) * 100).toFixed(0) || 0;
         //make sure that is a number not string
         //Number(variable)
     }
@@ -210,10 +216,7 @@ router.get('/scorecard', async (req, res, next) => {
     const arr = [];
     arr.push(await lifeTimeScore());
     arr.push(await mostRecentScore());
-    // const result = await lifeTimeScore();
-    // const result2 = await mostRecentScore();
     res.json(arr);
-    // res.json(result2);
 });
 
 router.get('/', async(req, res, next) => {
