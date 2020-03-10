@@ -27,14 +27,34 @@ async function lifeTimeScore() {
     try{
         const attemptsCorrect = await db.result(`
         select count(*) from spellingbeeattempts
-         where attemptCorrect=true and userid=1
+         where attemptCorrect=true and emailUsername='hey this is a test'
         `);
         const attemptsTotal = await db.result(`
         select count(*) from spellingbeeattempts
-        where userid=1;
+        where emailUsername='hey this is a test';
         `);
         // console.log(parseInt(attemptsCorrect.rows[0].count));
         return (parseInt(attemptsCorrect.rows[0].count)/parseInt(attemptsTotal.rows[0].count) * 100).toFixed(2);
+        //make sure that is a number not string
+        //Number(variable)
+    }
+    catch (err){
+        console.log('************ERROR************');
+        err.message;
+    }
+}
+
+async function mostRecentScore() {
+    // let attemptsCorrect = 0;
+    // let attemptsTotal = 0;
+    // let lifeTimeScore = attemptsCorrect/attemptsTotal;
+    try{
+        const attemptsCorrect = await db.result(`
+        select count(*) from (select * from spellingbeeattempts order by dateattempted asc limit 6) as mostrecent where attemptcorrect=true;
+        `);
+        const attemptsTotal = 6;
+        // console.log(parseInt(attemptsCorrect.rows[0].count));
+        return (parseInt(attemptsCorrect.rows[0].count)/parseInt(attemptsTotal) * 100).toFixed(2);
         //make sure that is a number not string
         //Number(variable)
     }
@@ -187,8 +207,13 @@ router.post('/login', async(req, res, next) => {
 })
 
 router.get('/scorecard', async (req, res, next) => {
-    const result = await lifeTimeScore();
-    res.json(result);
+    const arr = [];
+    arr.push(await lifeTimeScore());
+    arr.push(await mostRecentScore());
+    // const result = await lifeTimeScore();
+    // const result2 = await mostRecentScore();
+    res.json(arr);
+    // res.json(result2);
 });
 
 router.get('/', async(req, res, next) => {
