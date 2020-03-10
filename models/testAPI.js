@@ -47,14 +47,14 @@ async function lifeTimeScore() {
 
 
 
-async function postToDB(isCorrect, wordId) {
+async function postToDB(emailUsername, isCorrect, wordId) {
     // const date = new Date();
     try {
         const test = await db.result(`
         insert into spellingBeeAttempts
-        (userId, wordId, attemptCorrect, dateAttempted)
+        (emailUsername, wordId, attemptCorrect, dateAttempted)
         values
-        (1, ${wordId}, ${isCorrect}, localtimestamp);
+        ('${emailUsername}', ${wordId}, ${isCorrect}, localtimestamp);
         `);
         return test;
     }
@@ -200,8 +200,8 @@ router.get('/', async(req, res, next) => {
 
 router.post('/', async (req, res, next) => {
     console.log(req.body);
-    const { attemptCorrect, wordId } = req.body;
-    const response = await postToDB(attemptCorrect, wordId);
+    const { emailUsername, attemptCorrect, wordId } = req.body;
+    const response = await postToDB(emailUsername, attemptCorrect, wordId);
     console.log(response);
 })
 
