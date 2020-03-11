@@ -18,7 +18,7 @@ create table users (
 
 create table spellingBeeAttempts (
     emailUsername text,
-    wordId integer REFERENCES spellingBee(wordId) Not Null,
+    word text Not Null,
     attemptCorrect boolean,
     dateAttempted timestamp
 )

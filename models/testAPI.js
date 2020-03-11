@@ -70,17 +70,27 @@ async function mostRecentScore(emailUsername) {
     }
 }
 
+async function mostRecentWords(emailUsername) {
+    try {
+        const words = await db.result(`
+        select word, attemptcorrect from spellingbeeattempts where emailUsername='${emailUsername}' order by dateattempted desc limit 6;
+        `);
+        console.log(words);
+        return words;
+    }
+    catch (err) {
+        console.log(err);
+    }
+}
 
-
-
-async function postToDB(emailUsername, isCorrect, wordId) {
+async function postToDB(emailUsername, word, isCorrect) {
     // const date = new Date();
     try {
         const test = await db.result(`
         insert into spellingBeeAttempts
-        (emailUsername, wordId, attemptCorrect, dateAttempted)
+        (emailUsername, word, attemptCorrect, dateAttempted)
         values
-        ('${emailUsername}', ${wordId}, ${isCorrect}, localtimestamp);
+        ('${emailUsername}', '${word}', ${isCorrect}, localtimestamp);
         `);
         return test;
     }
@@ -134,16 +144,7 @@ async function pullFromDB() {
                 break;
         }
     }
-    
-    console.log(`WHOLE: ${arr}`);
     return arr;
-
-    // const result = await db.one(`select * from spellingBee where wordId=4;`);
-    // const result = await db.any(`select * from spellingBee;`);
-
-    // console.log('im in the function');
-    // console.log(result);
-    // return result;
 }
 
 async function createUser(name, emailUsername, hash) {
@@ -217,6 +218,10 @@ router.post('/scorecard', async (req, res, next) => {
     const arr = [];
     arr.push(await lifeTimeScore(emailUsername));
     arr.push(await mostRecentScore(emailUsername));
+    const wordsArray = await mostRecentWords(emailUsername);
+    arr.push(wordsArray.rows);
+    console.log('ARRRRRRRRRRRRRRRR');
+    console.log(arr);
     res.json(arr);
 });
 
@@ -229,9 +234,9 @@ router.get('/', async(req, res, next) => {
 
 router.post('/', async (req, res, next) => {
     console.log(req.body);
-    const { emailUsername, attemptCorrect, wordId } = req.body;
+    const { emailUsername, word, attemptCorrect } = req.body;
     try {
-        const response = await postToDB(emailUsername, attemptCorrect, wordId);
+        const response = await postToDB(emailUsername, word, attemptCorrect);
         console.log("RESPONSE==============");
         console.log(response);
         res.json({response: response});
