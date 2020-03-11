@@ -20,18 +20,18 @@ const db = pgp(options);
 // that we're talking to
 
 
-async function lifeTimeScore() {
+async function lifeTimeScore(emailUsername) {
     // let attemptsCorrect = 0;
     // let attemptsTotal = 0;
     // let lifeTimeScore = attemptsCorrect/attemptsTotal;
     try{
         const attemptsCorrect = await db.result(`
         select count(*) from spellingbeeattempts
-         where attemptCorrect=true and emailUsername='hey this is a test'
+         where attemptCorrect=true and emailUsername='${emailUsername}'
         `);
         const attemptsTotal = await db.result(`
         select count(*) from spellingbeeattempts
-        where emailUsername='hey this is a test';
+        where emailUsername='${emailUsername}';
         `);
         const result = (parseInt(attemptsCorrect.rows[0].count)/parseInt(attemptsTotal.rows[0].count) * 100).toFixed(0);
         console.log(result);
@@ -50,13 +50,13 @@ async function lifeTimeScore() {
     }
 }
 
-async function mostRecentScore() {
+async function mostRecentScore(emailUsername) {
     // let attemptsCorrect = 0;
     // let attemptsTotal = 0;
     // let lifeTimeScore = attemptsCorrect/attemptsTotal;
     try{
         const attemptsCorrect = await db.result(`
-        select count(*) from (select * from spellingbeeattempts order by dateattempted asc limit 6) as mostrecent where attemptcorrect=true;
+        select count(*) from (select * from spellingbeeattempts order by dateattempted desc limit 6) as mostrecent where attemptcorrect=true and emailUsername='${emailUsername}';
         `);
         const attemptsTotal = 6;
         // console.log(parseInt(attemptsCorrect.rows[0].count));
@@ -212,10 +212,11 @@ router.post('/login', async(req, res, next) => {
     : res.send('ITS BROKEN');
 })
 
-router.get('/scorecard', async (req, res, next) => {
+router.post('/scorecard', async (req, res, next) => {
+    const { emailUsername } = req.body;
     const arr = [];
-    arr.push(await lifeTimeScore());
-    arr.push(await mostRecentScore());
+    arr.push(await lifeTimeScore(emailUsername));
+    arr.push(await mostRecentScore(emailUsername));
     res.json(arr);
 });
 
@@ -229,8 +230,15 @@ router.get('/', async(req, res, next) => {
 router.post('/', async (req, res, next) => {
     console.log(req.body);
     const { emailUsername, attemptCorrect, wordId } = req.body;
-    const response = await postToDB(emailUsername, attemptCorrect, wordId);
-    console.log(response);
+    try {
+        const response = await postToDB(emailUsername, attemptCorrect, wordId);
+        console.log("RESPONSE==============");
+        console.log(response);
+        res.json({response: response});
+    } catch (err) {
+        console.log(`ERROR: ${err}`);
+        res.json({response: false})
+    }
 })
 
 module.exports = router;
