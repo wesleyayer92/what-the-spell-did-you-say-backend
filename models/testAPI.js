@@ -56,7 +56,7 @@ async function mostRecentScore(emailUsername) {
     // let lifeTimeScore = attemptsCorrect/attemptsTotal;
     try{
         const attemptsCorrect = await db.result(`
-        select count(*) from (select * from spellingbeeattempts order by dateattempted asc limit 6) as mostrecent where attemptcorrect=true and emailUsername='${emailUsername}';
+        select count(*) from (select * from spellingbeeattempts order by dateattempted desc limit 6) as mostrecent where attemptcorrect=true and emailUsername='${emailUsername}';
         `);
         const attemptsTotal = 6;
         // console.log(parseInt(attemptsCorrect.rows[0].count));
@@ -230,8 +230,15 @@ router.get('/', async(req, res, next) => {
 router.post('/', async (req, res, next) => {
     console.log(req.body);
     const { emailUsername, attemptCorrect, wordId } = req.body;
-    const response = await postToDB(emailUsername, attemptCorrect, wordId);
-    console.log(response);
+    try {
+        const response = await postToDB(emailUsername, attemptCorrect, wordId);
+        console.log("RESPONSE==============");
+        console.log(response);
+        res.json({response: response});
+    } catch (err) {
+        console.log(`ERROR: ${err}`);
+        res.json({response: false})
+    }
 })
 
 module.exports = router;
