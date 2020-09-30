@@ -19,9 +19,6 @@ the library of words provided by Scripps.
 Initially we had started with the idea of using an api built by Merriam Websters' Collegiate Dictionary
 which eventually turned into using lists of spelling be words to develop a mobile app that would test you on your spelling skill.
 
-## Screenshots
-![](assets/Screen%20Shot%202020-03-12%20at%201.37.40%20PM.png)
-![](assets/Screen%20Shot%202020-03-12%20at%201.41.09%20PM.png)
 
 ## Technologies Used
 
